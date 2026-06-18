@@ -1,0 +1,42 @@
+#menu {
+    #menu-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &.menu-collapse {
+        #menu-header {
+            height: 60px;
+            width: 60px;
+
+            h1 {
+                font-size: 20px;
+            }
+        }
+    }
+
+    .mi-collapse {
+        transition: .3s background-color;
+        &:hover {
+            background-color: red;
+            transition: .3s background-color;
+
+            .items {
+                visibility: visible;
+                top: 0;
+                right: 0;
+                transform: translateX(100%);
+                width: 210px;
+                border-top-right-radius: 5px;
+                border-bottom-right-radius: 5px;
+                overflow: hidden;
+            }
+        }
+
+        .items {
+            position: absolute;
+            visibility: hidden;
+        }
+    }
+}
