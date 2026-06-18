@@ -1,12 +1,13 @@
-import {  BsMusicNoteBeamed, BsMusicNoteList, BsMusicPlayer } from "react-icons/bs";
+import { BsMusicNoteBeamed } from "react-icons/bs";
 import { MenuItem } from "./MenuItem";
 import { useCollapseContext } from "../../../contexts/CollapseContext";
 import type { IconType } from "react-icons";
 import { motion } from "framer-motion";
+import { allMenu } from "../../../menu";
 
 export type MenuItemProps = {
     Icon?: IconType
-    path: string,
+    path?: string,
     title: string,
     titleHeader?: string,
     children?: MenuItemProps[],
@@ -15,11 +16,6 @@ export type MenuItemProps = {
 export default function Menu() {
 
     const { isCollapsed } = useCollapseContext();
-
-    const allMenu: MenuItemProps[] = [
-        { path: "/playlists", Icon: BsMusicNoteList, title: "Mes Playlists", titleHeader: "My all Playlists" },
-        { path: "/musics", Icon: BsMusicPlayer, title: "Mes Musiques" , titleHeader: "My all Musiques"},
-    ]
 
     return <motion.div
         id="menu"

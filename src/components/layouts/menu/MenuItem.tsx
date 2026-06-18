@@ -63,7 +63,7 @@ const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, titleHeader, Icon,
             </span>
 
             {hasChild.current ? title : <NavLink
-                to={path}
+                to={path ?? ""}
                 onClick={() => {
                     if (titleHeader) {
                         changeTitle(titleHeader)
@@ -98,7 +98,7 @@ const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, titleHeader, Icon,
 function MenuItemCollapse({ path, Icon, children }: MenuItemProps) {
     const hasChild = useRef<boolean>(Boolean(children));
     return <motion.div className="p-4 mi-collapse relative">
-        <NavLink className="flex items-center justify-center" to={path}>
+        <NavLink className="flex items-center justify-center" to={path ?? ""}>
             <span style={{
                 fontSize: "30px"
             }}>
