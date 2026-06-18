@@ -46,3 +46,21 @@ export async function login(email: string, password: string): Promise<LoginRespo
             }
         })
 }
+
+export async function logout(): Promise<LogoutResponse> {
+    return api.get("/logout")
+        .then(rep => {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
+            return {
+                status: rep.status,
+                message: rep.data.message
+            }
+        })
+        .catch((err: AxiosError) => {
+            return {
+                status: err.status || 500,
+                message: (err.response?.data as { message: string }).message
+            }
+        })
+}
