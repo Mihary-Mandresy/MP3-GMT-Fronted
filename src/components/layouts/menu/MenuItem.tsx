@@ -4,6 +4,7 @@ import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { useRef, useState } from "react";
 import { BsChevronRight, BsMenuApp } from "react-icons/bs";
+import { useHeaderContext } from "../../../contexts/HeaderContext";
 
 const itemVariants: Variants = {
     visible: {
@@ -21,12 +22,13 @@ const itemVariants: Variants = {
 
 export const MenuItem: React.FC<MenuItemProps & {
     collapse: boolean
-}> = ({ path, title, Icon, children, collapse }) => {
+}> = ({ path, title, Icon, titleHeader ,children, collapse }) => {
     return collapse ?
         <MenuItemCollapse
             path={path}
             title={title}
             Icon={Icon}
+            titleHeader={titleHeader}
             children={children}
         /> :
         <MenuItemFull
@@ -34,13 +36,16 @@ export const MenuItem: React.FC<MenuItemProps & {
             title={title}
             Icon={Icon}
             children={children}
+            titleHeader={titleHeader}
         />;
 
 }
 
-const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, Icon, children }) => {
+const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, titleHeader, Icon, children }) => {
     const [open, setOpen] = useState<boolean>(false);
     const hasChild = useRef<boolean>(Boolean(children));
+
+    const {changeTitle} = useHeaderContext();
 
     return <motion.div
         variants={itemVariants}
@@ -56,7 +61,16 @@ const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, Icon, children }) 
             }}>
                 {Icon ? <Icon /> : <BsMenuApp />}
             </span>
-            <NavLink to={path}>{title}</NavLink>
+
+            {hasChild.current ? title : <NavLink
+                to={path}
+                onClick={() => {
+                    if (titleHeader) {
+                        changeTitle(titleHeader)
+                    }
+                }}
+            >{title}</NavLink>}
+
             {hasChild.current && <motion.span
                 className="absolute right-6"
                 animate={{

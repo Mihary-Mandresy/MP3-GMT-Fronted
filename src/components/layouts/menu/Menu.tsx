@@ -1,8 +1,7 @@
-import { BsAlarm, BsMusicNoteBeamed } from "react-icons/bs";
+import {  BsMusicNoteBeamed, BsMusicNoteList, BsMusicPlayer } from "react-icons/bs";
 import { MenuItem } from "./MenuItem";
 import { useCollapseContext } from "../../../contexts/CollapseContext";
 import type { IconType } from "react-icons";
-import { BiAbacus, BiSolidBabyCarriage } from "react-icons/bi";
 import { motion } from "framer-motion";
 
 export type MenuItemProps = {
@@ -18,39 +17,8 @@ export default function Menu() {
     const { isCollapsed } = useCollapseContext();
 
     const allMenu: MenuItemProps[] = [
-        {
-            path: "", Icon: BiAbacus, title: "Mes Playlists", children: [
-                {
-                    path: "", title: "Mes Playlists", children: [
-                        { path: "", title: "Mes Playlists" },
-                        { path: "", title: "Mes Playlists" }
-                    ]
-                },
-                { path: "", title: "Mes Playlists" },
-            ]
-        },
-        {
-            path: "", Icon: BiSolidBabyCarriage, title: "Mes Playlists", children: [
-                {
-                    path: "", title: "Mes Playlists", children: [
-                        { path: "", title: "Mes Playlists" },
-                        { path: "", title: "Mes Playlists" }
-                    ]
-                },
-                { path: "", title: "Mes Playlists" },
-            ]
-        },
-        {
-            path: "", Icon: BsAlarm, title: "Mes Playlists", children: [
-                {
-                    path: "", title: "Mes Playlists", children: [
-                        { path: "", title: "Mes Playlists" },
-                        { path: "", title: "Mes Playlists" }
-                    ]
-                },
-                { path: "", title: "Mes Playlists" },
-            ]
-        }
+        { path: "/playlists", Icon: BsMusicNoteList, title: "Mes Playlists", titleHeader: "My all Playlists" },
+        { path: "/musics", Icon: BsMusicPlayer, title: "Mes Musiques" , titleHeader: "My all Musiques"},
     ]
 
     return <motion.div
