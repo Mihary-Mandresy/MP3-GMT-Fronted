@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
-import { URL } from "../config";
-import type { AuthProp } from "../../../AuthContext";
+import { api, URL } from "../config";
+import type { AuthProp, User } from "../contexts/AuthContext";
 
 type LoginResponse = {
     status: number,
@@ -8,23 +8,59 @@ type LoginResponse = {
     auth: AuthProp | undefined
 }
 
-export async function login(email: string, password: string) : Promise<LoginResponse> {
+type apiLoginResponse = {
+    message: string,
+    token?: string,
+    user?: User
+}
+
+type LogoutResponse = Pick<LoginResponse, "status" | "message">;
+
+export async function login(email: string, password: string): Promise<LoginResponse> {
     return axios.post(URL + "/login", {
         email, password
     })
         .then(rep => {
-            const data = rep.data
+            const data: apiLoginResponse = rep.data
+            if (data.user) {
+                localStorage.setItem("user", JSON.stringify(data.user));
+            }
+            if (data.token) {
+                localStorage.setItem("token", data.token);
+            }
+
             return {
                 status: rep.status,
                 message: data.message as string,
-                auth: data.auth as AuthProp
+                auth: {
+                    token: data.token,
+                    user: data.user
+                } as AuthProp
             };
         })
         .catch((err: AxiosError) => {
             return {
                 status: err.status || 500,
-                message: (err.response?.data as {message: string}).message,
+                message: (err.response?.data as { message: string }).message,
                 auth: undefined
+            }
+        })
+}
+
+export async function logout(): Promise<LogoutResponse> {
+    return api.get("/logout")
+        .then(rep => {
+            localStorage.removeItem("user");
+            localStorage.removeItem("token");
+            return {
+                status: rep.status,
+                message: rep.data.message
+            }
+        })
+        .catch((err: AxiosError) => {
+            return {
+                status: err.status || 500,
+                message: (err.response?.data as { message: string }).message
             }
         })
 }

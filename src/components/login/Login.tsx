@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from "react"
-import { login } from "../services/AuthService"
-import { Input } from "./Input";
+import { login } from "../../services/AuthService"
+import { Input } from "../Input";
+import { useNavigate } from "react-router-dom";
+import { useAuthContext } from "../../contexts/AuthContext";
 
 export default function Login() {
     const email = useRef("");
     const password = useRef("");
 
     const [error, setError] = useState<string>("");
+
+    const navigate = useNavigate();
+    const { setAuth } = useAuthContext()!;
 
     useEffect(() => {
         const tm = setTimeout(() => {
@@ -22,7 +27,7 @@ export default function Login() {
             <Input
                 refValue={email}
                 label="Email"
-                defaultValue="ranjatosonmihary@gmil.com"
+                defaultValue="ranjatosonmihary@gmail.com"
             />
             <Input
                 refValue={password}
@@ -41,7 +46,8 @@ export default function Login() {
                 if (rep.status == 401) {
                     setError(rep.message);
                 } else {
-                    
+                    setAuth(rep.auth)
+                    navigate("/");
                 }
             }}>Se Connecter</button>
         </form>
