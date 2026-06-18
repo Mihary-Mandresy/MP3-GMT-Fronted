@@ -6,7 +6,11 @@ function App() {
 
   return <BrowserRouter>
     <Routes>
-      <Route index element={<LayoutRedirect />} />
+      <Route element={<LayoutRedirect />}>
+        <Route index element={<div className="h-full flex items-center justify-center">
+          <h1 className="text-4xl">Hello World !</h1>
+        </div>} />
+      </Route>
       <Route path="/login" element={<Login />} />
     </Routes>
   </BrowserRouter>
