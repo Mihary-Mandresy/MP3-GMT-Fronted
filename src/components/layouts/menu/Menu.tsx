@@ -3,6 +3,7 @@ import { MenuItem } from "./MenuItem";
 import { useCollapseContext } from "../../../contexts/CollapseContext";
 import type { IconType } from "react-icons";
 import { BiAbacus, BiSolidBabyCarriage } from "react-icons/bi";
+import { motion } from "framer-motion";
 
 export type MenuItemProps = {
     Icon?: IconType
@@ -52,17 +53,19 @@ export default function Menu() {
         }
     ]
 
-    return <div id="menu" className={`left-0 top-0 bg-orange-300 h-screen pt-16 ${isCollapsed ? "menu-collapse" : ""}`} style={{
-        width: isCollapsed ? "80px" : "280px",
-        transition: ".3s width"
-    }}>
-        {/* <div className="mb-3">
+    return <motion.div
+        id="menu"
+        className={`left-0 top-0 bg-orange-300 h-screen pt-16 ${isCollapsed ? "menu-collapse" : ""}`} style={{
+            width: isCollapsed ? "80px" : "280px",
+            transition: ".3s width"
+        }}>
+        <div className="py-4">
             <div id="menu-header" className={`h-20 w-20 rounded-full mx-auto bg-red-300 border-4 border-red-700`}>
                 <h1 className="text-3xl flex items-center justify-center h-20">
                     <BsMusicNoteBeamed />
                 </h1>
             </div>
-        </div> */}
-        {allMenu.map(menu => <MenuItem {...menu} collapse={isCollapsed} />)}
-    </div>
+        </div>
+        {allMenu.map((menu, index) => <MenuItem key={menu.path + "_" + index} {...menu} collapse={isCollapsed} />)}
+    </motion.div>
 }

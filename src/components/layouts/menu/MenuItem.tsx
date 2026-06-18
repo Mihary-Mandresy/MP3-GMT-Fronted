@@ -1,9 +1,23 @@
 import type React from "react"
 import type { MenuItemProps } from "./Menu"
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { useRef, useState } from "react";
 import { BsChevronRight, BsMenuApp } from "react-icons/bs";
+
+const itemVariants: Variants = {
+    visible: {
+        transition: {
+            duration: .3
+        },
+        opacity: 1,
+        x: 0
+    },
+    hidden: {
+        opacity: 0,
+        x: "-100%"
+    }
+}
 
 export const MenuItem: React.FC<MenuItemProps & {
     collapse: boolean
@@ -28,7 +42,12 @@ const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, Icon, children }) 
     const [open, setOpen] = useState<boolean>(false);
     const hasChild = useRef<boolean>(Boolean(children));
 
-    return <motion.div className="pl-6 bg-green-400">
+    return <motion.div
+        variants={itemVariants}
+        initial="hidden"
+        animate="visible"
+        exit={"hidden"}
+        className="pl-6 bg-green-400">
         <div className="flex items-center py-2 relative" onClick={() => {
             setOpen(!open);
         }}>
@@ -47,7 +66,7 @@ const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, Icon, children }) 
             </motion.span>}
         </div>
         {hasChild.current && <AnimatePresence>
-            {open && <motion.div className="overflow-hidden" initial={{
+            {open && <motion.div className="verflow-hidden" initial={{
                 height: "0px"
             }} animate={{
                 height: "auto"
@@ -56,7 +75,7 @@ const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, Icon, children }) 
                     height: 0
                 }}
             >
-                {children?.map(menu => <MenuItem {...menu} collapse={false} />)}
+                {children?.map((menu, index) => <MenuItem key={menu.path + "_" + index} {...menu} collapse={false} />)}
             </motion.div>}
         </AnimatePresence>}
     </motion.div>
@@ -74,7 +93,8 @@ function MenuItemCollapse({ path, Icon, children }: MenuItemProps) {
         </NavLink>
 
         {hasChild && <div className="items">
-            {children?.map(menu => <MenuItem
+            {children?.map((menu, index) => <MenuItem
+                key={menu.path + "__" + index}
                 path={menu.path}
                 title={menu.title}
                 Icon={menu.Icon}
