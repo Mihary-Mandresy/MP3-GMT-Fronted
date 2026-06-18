@@ -47,7 +47,6 @@ export default function Login() {
                     setError(rep.message);
                 } else {
                     setAuth(rep.auth)
-                    sessionStorage.setItem("auth", JSON.stringify(rep.auth));
                     navigate("/");
                 }
             }}>Se Connecter</button>
