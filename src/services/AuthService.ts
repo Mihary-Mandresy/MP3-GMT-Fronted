@@ -1,6 +1,6 @@
 import axios, { AxiosError } from "axios";
 import { URL } from "../config";
-import type { AuthProp } from "../../../AuthContext";
+import type { AuthProp } from "../contexts/AuthContext";
 
 type LoginResponse = {
     status: number,
@@ -8,7 +8,7 @@ type LoginResponse = {
     auth: AuthProp | undefined
 }
 
-export async function login(email: string, password: string) : Promise<LoginResponse> {
+export async function login(email: string, password: string): Promise<LoginResponse> {
     return axios.post(URL + "/login", {
         email, password
     })
@@ -17,13 +17,16 @@ export async function login(email: string, password: string) : Promise<LoginResp
             return {
                 status: rep.status,
                 message: data.message as string,
-                auth: data.auth as AuthProp
+                auth: {
+                    token: data.token,
+                    user: data.user
+                }
             };
         })
         .catch((err: AxiosError) => {
             return {
                 status: err.status || 500,
-                message: (err.response?.data as {message: string}).message,
+                message: (err.response?.data as { message: string }).message,
                 auth: undefined
             }
         })
