@@ -2,7 +2,7 @@ import type React from "react"
 import type { MenuItemProps } from "./Menu"
 import { AnimatePresence, motion, type Variants } from "framer-motion";
 import { NavLink } from "react-router-dom";
-import { useRef, useState } from "react";
+import {  useState } from "react";
 import { BsChevronRight, BsMenuApp } from "react-icons/bs";
 import { useHeaderContext } from "../../../contexts/HeaderContext";
 
@@ -39,11 +39,11 @@ export const MenuItem: React.FC<MenuItemProps & {
 
 const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, titleHeader, Icon, children }) => {
     const [open, setOpen] = useState<boolean>(false);
-    const hasChild = useRef<boolean>(Boolean(children));
+    const hasChild = !!children?.length;
 
     const { changeTitle } = useHeaderContext();
 
-    return hasChild.current ?
+    return hasChild ?
         <motion.div
             variants={itemVariants}
             initial="hidden"
@@ -110,7 +110,7 @@ const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, titleHeader, Icon,
 }
 
 function MenuItemCollapse({ path, Icon, children }: MenuItemProps) {
-    const hasChild = useRef<boolean>(Boolean(children));
+    const hasChild = !!children?.length;
     return <motion.div className="mi-collapse relative">
         <NavLink className="flex p-4 items-center justify-center" to={path ?? ""}>
             <span style={{
@@ -120,7 +120,7 @@ function MenuItemCollapse({ path, Icon, children }: MenuItemProps) {
             </span>
         </NavLink>
 
-        {hasChild.current && <div className="items">
+        {hasChild && <div className="items">
             {children?.map((menu, index) => <MenuItem
                 key={menu.path + "__" + index}
                 path={menu.path}
