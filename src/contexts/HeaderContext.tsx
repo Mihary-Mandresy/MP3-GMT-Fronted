@@ -13,8 +13,6 @@ const HeaderContext = createContext<HeaderContextType | null>(null);
 export function HeaderProvider({ children }: PropsWithChildren) {
     const location = useLocation();
 
-    console.log(location.pathname);
-
     const [title, setTitle] = useState<string>(() => {
         return getTitleByPath(location.pathname, allMenu) ?? getTitleByPath(defaultPath, allMenu)!;
     });

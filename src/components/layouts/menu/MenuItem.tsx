@@ -8,21 +8,18 @@ import { useHeaderContext } from "../../../contexts/HeaderContext";
 
 const itemVariants: Variants = {
     visible: {
-        transition: {
-            duration: .3
-        },
         opacity: 1,
-        x: 0
+        x: 0,
     },
     hidden: {
         opacity: 0,
-        x: "-100%"
+        x: "-100%",
     }
 }
 
 export const MenuItem: React.FC<MenuItemProps & {
     collapse: boolean
-}> = ({ path, title, Icon, titleHeader ,children, collapse }) => {
+}> = ({ path, title, Icon, titleHeader, children, collapse }) => {
     return collapse ?
         <MenuItemCollapse
             path={path}
@@ -38,67 +35,84 @@ export const MenuItem: React.FC<MenuItemProps & {
             children={children}
             titleHeader={titleHeader}
         />;
-
 }
 
 const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, titleHeader, Icon, children }) => {
     const [open, setOpen] = useState<boolean>(false);
     const hasChild = useRef<boolean>(Boolean(children));
 
-    const {changeTitle} = useHeaderContext();
+    const { changeTitle } = useHeaderContext();
 
-    return <motion.div
-        variants={itemVariants}
-        initial="hidden"
-        animate="visible"
-        exit={"hidden"}
-        className="pl-6 bg-green-400">
-        <div className="flex items-center py-2 relative" onClick={() => {
-            setOpen(!open);
-        }}>
-            <span className="mr-4" style={{
-                fontSize: "17px"
+    return hasChild.current ?
+        <motion.div
+            variants={itemVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            className="bg-green-400"
+        >
+            <div className="flex items-center relative cursor-pointer" onClick={() => {
+                setOpen(!open);
             }}>
-                {Icon ? <Icon /> : <BsMenuApp />}
-            </span>
-
-            {hasChild.current ? title : <NavLink
+                <span className="navlink">
+                    <span className="mr-6 i" style={{
+                        fontSize: "17px"
+                    }}>
+                        {Icon ? <Icon /> : <BsMenuApp />}
+                    </span>
+                    {title}
+                    <motion.span
+                        className="absolute right-6"
+                        animate={{
+                            rotate: open ? 90 : 0,
+                        }}>
+                        <BsChevronRight />
+                    </motion.span>
+                </span>
+            </div>
+            <AnimatePresence>
+                {open && <motion.div className="overflow-hidden pl-6" initial={{
+                    height: "0px"
+                }} animate={{
+                    height: "auto"
+                }}
+                    exit={{
+                        height: 0
+                    }}
+                >
+                    {children?.map((menu, index) => <MenuItem key={menu.path + "_" + index} {...menu} collapse={false} />)}
+                </motion.div>}
+            </AnimatePresence>
+        </motion.div> :
+        <motion.div
+            variants={itemVariants}
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+        >
+            <NavLink
                 to={path ?? ""}
+                className="block navlink"
                 onClick={() => {
                     if (titleHeader) {
                         changeTitle(titleHeader)
                     }
                 }}
-            >{title}</NavLink>}
-
-            {hasChild.current && <motion.span
-                className="absolute right-6"
-                animate={{
-                    rotate: open ? 90 : 0,
-                }}>
-                <BsChevronRight />
-            </motion.span>}
-        </div>
-        {hasChild.current && <AnimatePresence>
-            {open && <motion.div className="verflow-hidden" initial={{
-                height: "0px"
-            }} animate={{
-                height: "auto"
-            }}
-                exit={{
-                    height: 0
-                }}
             >
-                {children?.map((menu, index) => <MenuItem key={menu.path + "_" + index} {...menu} collapse={false} />)}
-            </motion.div>}
-        </AnimatePresence>}
-    </motion.div>
+                <span className="mr-6 i" style={{
+                    fontSize: "17px"
+                }}>
+                    {Icon ? <Icon /> : <BsMenuApp />}
+                </span>
+                {title}
+            </NavLink>
+        </motion.div>
 }
 
 function MenuItemCollapse({ path, Icon, children }: MenuItemProps) {
     const hasChild = useRef<boolean>(Boolean(children));
-    return <motion.div className="p-4 mi-collapse relative">
-        <NavLink className="flex items-center justify-center" to={path ?? ""}>
+    return <motion.div className="mi-collapse relative">
+        <NavLink className="flex p-4 items-center justify-center" to={path ?? ""}>
             <span style={{
                 fontSize: "30px"
             }}>
@@ -106,7 +120,7 @@ function MenuItemCollapse({ path, Icon, children }: MenuItemProps) {
             </span>
         </NavLink>
 
-        {hasChild && <div className="items">
+        {hasChild.current && <div className="items">
             {children?.map((menu, index) => <MenuItem
                 key={menu.path + "__" + index}
                 path={menu.path}
