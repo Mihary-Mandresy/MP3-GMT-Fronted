@@ -14,7 +14,11 @@ function App() {
         <Route path="/musics" element={<div className="h-full flex items-center justify-center">
           <h1 className="text-4xl">Musics !</h1>
         </div>} />
+        <Route path="/test" element={<div className="h-full flex items-center justify-center">
+          <h1 className="text-4xl">Test !</h1>
+        </div>} />
       </Route>
+      
       <Route path="/login" element={<Login />} />
     </Routes>
   </BrowserRouter>

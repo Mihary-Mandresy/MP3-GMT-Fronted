@@ -1,11 +1,13 @@
 import { createContext, useContext, useState, useCallback, useMemo, type PropsWithChildren } from "react";
 import { useLocation } from "react-router-dom";
-import { allMenu, getTitleByPath } from "../menu";
+import { allMenu, getAliasByPath, getTitleByPath } from "../menu";
 import { defaultPath } from "../config";
 
 interface HeaderContextType {
     title: string;
+    alias: string | undefined
     changeTitle: (value: string) => void;
+    changeAlias: (value: string) => void;
 }
 
 const HeaderContext = createContext<HeaderContextType | null>(null);
@@ -17,6 +19,13 @@ export function HeaderProvider({ children }: PropsWithChildren) {
         return getTitleByPath(location.pathname, allMenu) ?? getTitleByPath(defaultPath, allMenu)!;
     });
 
+    const [alias, setAlias] = useState<string>(() => {        
+        return  getAliasByPath(location.pathname, allMenu) ?? "";
+    });
+    
+    const changeAlias = useCallback((value : string) => {        
+        setAlias(value);
+    }, []);
 
     const changeTitle = useCallback((value: string) => {
         setTitle(value);
@@ -24,8 +33,10 @@ export function HeaderProvider({ children }: PropsWithChildren) {
 
     const value = useMemo(() => ({
         title,
+        alias,
         changeTitle,
-    }), [title, changeTitle]);
+        changeAlias
+    }), [title, changeTitle, alias]);
 
     return (
         <HeaderContext.Provider value={value}>

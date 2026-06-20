@@ -19,7 +19,7 @@ const itemVariants: Variants = {
 
 export const MenuItem: React.FC<MenuItemProps & {
     collapse: boolean
-}> = ({ path, title, Icon, titleHeader, children, collapse }) => {
+}> = ({ path, title, Icon, titleHeader, children, collapse, alias }) => {
     return collapse ?
         <MenuItemCollapse
             path={path}
@@ -27,6 +27,7 @@ export const MenuItem: React.FC<MenuItemProps & {
             Icon={Icon}
             titleHeader={titleHeader}
             children={children}
+            alias={alias}
         /> :
         <MenuItemFull
             path={path}
@@ -34,14 +35,17 @@ export const MenuItem: React.FC<MenuItemProps & {
             Icon={Icon}
             children={children}
             titleHeader={titleHeader}
+            alias={alias}
         />;
 }
 
-const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, titleHeader, Icon, children }) => {
-    const [open, setOpen] = useState<boolean>(false);
+const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, titleHeader, Icon, children, alias }) => {
+    const { changeTitle, alias : aliasCtx } = useHeaderContext();
+    const [open, setOpen] = useState<boolean>(() => {        
+        return aliasCtx?.startsWith(alias) ?? false;
+    });
     const hasChild = !!children?.length;
 
-    const { changeTitle } = useHeaderContext();
 
     return hasChild ?
         <motion.div
@@ -109,7 +113,7 @@ const MenuItemFull: React.FC<MenuItemProps> = ({ path, title, titleHeader, Icon,
         </motion.div>
 }
 
-function MenuItemCollapse({ path, Icon, children }: MenuItemProps) {
+function MenuItemCollapse({ path, Icon, children, alias }: MenuItemProps) {
     const hasChild = !!children?.length;
     return <motion.div className="mi-collapse relative">
         <NavLink className="flex p-4 items-center justify-center" to={path ?? ""}>
@@ -128,6 +132,7 @@ function MenuItemCollapse({ path, Icon, children }: MenuItemProps) {
                 Icon={menu.Icon}
                 children={menu.children}
                 collapse={false}
+                alias={alias}
             />)}
         </div>}
 

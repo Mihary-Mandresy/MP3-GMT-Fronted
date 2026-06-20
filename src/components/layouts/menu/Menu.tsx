@@ -4,6 +4,8 @@ import { useCollapseContext } from "../../../contexts/CollapseContext";
 import type { IconType } from "react-icons";
 import { motion } from "framer-motion";
 import { allMenu } from "../../../menu";
+import { useEffect } from "react";
+import { useHeaderContext } from "../../../contexts/HeaderContext";
 
 export type MenuItemProps = {
     Icon?: IconType
@@ -11,11 +13,17 @@ export type MenuItemProps = {
     title: string,
     titleHeader?: string,
     children?: MenuItemProps[],
+    alias: string
 }
 
 export default function Menu() {
 
     const { isCollapsed } = useCollapseContext();
+    const {changeAlias} = useHeaderContext();
+
+    useEffect(() => {
+        changeAlias("");
+    }, []);
 
     return <motion.div
         id="menu"
@@ -30,6 +38,8 @@ export default function Menu() {
                 </h1>
             </div>
         </div>
-        {allMenu.map((menu, index) => <MenuItem key={menu.path + "_" + index} {...menu} collapse={isCollapsed} />)}
+        {allMenu.map((menu, index) => {
+            return <MenuItem key={menu.path + "_" + index} {...menu} collapse={isCollapsed} />;;
+        })}
     </motion.div>
 }
