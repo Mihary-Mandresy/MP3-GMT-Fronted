@@ -16,18 +16,48 @@
         }
     }
 
+    .navlink {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+        background-color: red;
+        padding-left: 24px;
+        width: 100%;
+
+        .i {
+            font-size: 18px !important;
+        }
+
+        &.active {
+            background-color: white;
+            color: black;
+        }
+    }
+
     .mi-collapse {
         transition: .3s background-color;
-        &:hover {
-            background-color: red;
-            transition: .3s background-color;
 
+        &>a {
+            height: 100%;
+            width: 100%;
+
+            &:hover {
+                background-color: red;
+                transition: .3s background-color;
+            }
+
+            &.active {
+                background-color: white;
+            }
+        }
+
+        &:hover {
             .items {
                 visibility: visible;
                 top: 0;
                 right: 0;
-                transform: translateX(100%);
-                width: 210px;
+                transform: translateX(calc(100% - 2px));
+                width: 250px;
                 border-top-right-radius: 5px;
                 border-bottom-right-radius: 5px;
                 overflow: hidden;

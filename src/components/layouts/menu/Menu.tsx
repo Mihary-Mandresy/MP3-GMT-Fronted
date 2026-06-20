@@ -1,57 +1,29 @@
-import { BsAlarm, BsMusicNoteBeamed } from "react-icons/bs";
+import { BsMusicNoteBeamed } from "react-icons/bs";
 import { MenuItem } from "./MenuItem";
 import { useCollapseContext } from "../../../contexts/CollapseContext";
 import type { IconType } from "react-icons";
-import { BiAbacus, BiSolidBabyCarriage } from "react-icons/bi";
 import { motion } from "framer-motion";
+import { allMenu } from "../../../menu";
+import { useEffect } from "react";
+import { useHeaderContext } from "../../../contexts/HeaderContext";
 
 export type MenuItemProps = {
     Icon?: IconType
-    path: string,
+    path?: string,
     title: string,
     titleHeader?: string,
     children?: MenuItemProps[],
+    alias: string
 }
 
 export default function Menu() {
 
     const { isCollapsed } = useCollapseContext();
+    const {changeAlias} = useHeaderContext();
 
-    const allMenu: MenuItemProps[] = [
-        {
-            path: "", Icon: BiAbacus, title: "Mes Playlists", children: [
-                {
-                    path: "", title: "Mes Playlists", children: [
-                        { path: "", title: "Mes Playlists" },
-                        { path: "", title: "Mes Playlists" }
-                    ]
-                },
-                { path: "", title: "Mes Playlists" },
-            ]
-        },
-        {
-            path: "", Icon: BiSolidBabyCarriage, title: "Mes Playlists", children: [
-                {
-                    path: "", title: "Mes Playlists", children: [
-                        { path: "", title: "Mes Playlists" },
-                        { path: "", title: "Mes Playlists" }
-                    ]
-                },
-                { path: "", title: "Mes Playlists" },
-            ]
-        },
-        {
-            path: "", Icon: BsAlarm, title: "Mes Playlists", children: [
-                {
-                    path: "", title: "Mes Playlists", children: [
-                        { path: "", title: "Mes Playlists" },
-                        { path: "", title: "Mes Playlists" }
-                    ]
-                },
-                { path: "", title: "Mes Playlists" },
-            ]
-        }
-    ]
+    useEffect(() => {
+        changeAlias("");
+    }, []);
 
     return <motion.div
         id="menu"
@@ -66,6 +38,8 @@ export default function Menu() {
                 </h1>
             </div>
         </div>
-        {allMenu.map((menu, index) => <MenuItem key={menu.path + "_" + index} {...menu} collapse={isCollapsed} />)}
+        {allMenu.map((menu, index) => {
+            return <MenuItem key={menu.path + "_" + index} {...menu} collapse={isCollapsed} />;;
+        })}
     </motion.div>
 }

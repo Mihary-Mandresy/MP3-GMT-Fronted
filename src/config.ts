@@ -5,13 +5,14 @@ export const PORT = 8000
 
 export const URL = `http://${HOST}:${PORT}/api`
 
-
 const api = axios.create({
     baseURL: URL,
     headers: {
         "Content-Type": "application/json"
     }
 })
+
+export const defaultPath = "/playlists";
 
 api.interceptors.request.use((config) => {
     const token = localStorage.getItem("token");

@@ -5,6 +5,7 @@ import { Menu } from "lucide-react"
 import { useCollapseContext } from "../../contexts/CollapseContext";
 import { BsMusicNoteBeamed } from "react-icons/bs";
 import { motion } from "framer-motion";
+import { useHeaderContext } from "../../contexts/HeaderContext";
 
 export default function Header() {
 
@@ -17,6 +18,8 @@ export default function Header() {
             navigate("/login")
         }
     }
+
+    const { title } = useHeaderContext();
 
     const { toggleCollapse, isCollapsed } = useCollapseContext();
 
@@ -57,7 +60,7 @@ export default function Header() {
             }}>
                 <Menu size={23} />
             </button>
-            <h1 className="text-3xl">Ceci est une titre</h1>
+            <h1 className="text-3xl">{title}</h1>
         </div>
         <div className="h-full w-70 bg-blue-100 flex items-center justify-evenly">
             {auth?.user.name}
